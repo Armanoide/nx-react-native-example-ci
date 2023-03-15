@@ -1,4 +1,29 @@
+
 # Happynrwl
+
+## Test e2e
+
+#### iOS
+
+build
+```
+yarn run test:mobile:build:e2e:ios
+```
+then run with
+```
+yarn run test:mobile:run:e2e:ios
+```
+#### Android
+build
+```
+yarn run test:mobile:build:e2e:android
+```
+then run with
+```
+yarn run test:mobile:run:e2e:android
+```
+
+check out on `package.json` for more info.
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 

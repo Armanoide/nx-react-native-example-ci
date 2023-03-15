@@ -6,9 +6,9 @@
     "start": "nx serve mobile:serve",
     "build": "nx build",
     "test:mobile:build:e2e:ios": "cd apps/mobile-e2e/ && detox build -c ios.sim.release && cd ../..",
-    "test:mobile:test:e2e:ios": "cd apps/mobile-e2e/ && detox test -c ios.sim.release && cd ../..",
-    "test:mobile:build:e2e:android": "cd apps/mobile-e2e/ && detox build -c android.release && cd ../..",
-    "test:mobile:test:e2e:android": "cd apps/mobile-e2e/ && detox test -c android.release && cd ../.."
+    "test:mobile:run:e2e:ios": "cd apps/mobile-e2e/ && detox test -c ios.sim.release && cd ../..",
+    "test:mobile:build:e2e:android": "cd apps/mobile-e2e/ && detox build -c android.emu.release && cd ../..",
+    "test:mobile:run:e2e:android": "cd apps/mobile-e2e/ && detox test -c android.emu.release && cd ../.."
   },
   "private": true,
   "dependencies": {
