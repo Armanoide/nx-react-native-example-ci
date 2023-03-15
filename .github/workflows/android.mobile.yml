@@ -1,0 +1,52 @@
+name: Android
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: 🛍 Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: 💽 Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          cache: 'yarn'
+
+      - name: 🧩 Install Dependencies
+        run: yarn --frozen-lockfile --prefer-offline
+
+      - name: ✅ Linter
+        run: yarn nx run-many --all --target=lint
+
+      - name: Use specific Java version for sdkmanager to work
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: gradle
+
+      - name: 🧪 Run Android test with detox
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          profile: pixel
+          avd-name: Pixel_4_API_31
+          emulator-options: -verbose -no-boot-anim -noaudio -no-window -gpu swiftshader_indirect -no-boot-anim
+          ram-size: 2048
+          script: yarn run test:mobile:e2e:android
+
+      - name: 📸 Upload artifacts in failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-artifacts
+          path: |
+            **/artifacts/

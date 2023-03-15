@@ -5,10 +5,14 @@
   "scripts": {
     "start": "nx serve mobile:serve",
     "build": "nx build",
+    "generate:node_modules:mobile": "npx nx run mobile:ensure-symlink",
     "test:mobile:build:e2e:ios": "cd apps/mobile-e2e/ && detox build -c ios.sim.release && cd ../..",
-    "test:mobile:run:e2e:ios": "cd apps/mobile-e2e/ && detox test -c ios.sim.release && cd ../..",
+    "test:mobile:run:e2e:ios": "cd apps/mobile-e2e/ && detox test -c ios.sim.release --cleanup --headless --record-logs all --take-screenshots all && cd ../..",
+    "test:mobile:e2e:ios": "yarn run test:mobile:build:e2e:ios && yarn run test:mobile:run:e2e:ios",
     "test:mobile:build:e2e:android": "cd apps/mobile-e2e/ && detox build -c android.emu.release && cd ../..",
-    "test:mobile:run:e2e:android": "cd apps/mobile-e2e/ && detox test -c android.emu.release && cd ../.."
+    "test:mobile:run:e2e:android": "cd apps/mobile-e2e/ && detox test -c android.emu.release --headless --record-logs all --take-screenshots all && cd ../..",
+    "test:mobile:e2e:android": "yarn run test:mobile:build:e2e:android && yarn run test:mobile:run:e2e:android",
+    "postinstall": "yarn run generate:node_modules:mobile"
   },
   "private": true,
   "dependencies": {
