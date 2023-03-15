@@ -1,0 +1,13 @@
+{
+  "preset": "../../jest.preset",
+  "testTimeout": 120000,
+  "maxWorkers": 1,
+  "reporters": ["detox/runners/jest/streamlineReporter"],
+  "testEnvironment": "./environment",
+  "verbose": true,
+  "setupFilesAfterEnv": ["<rootDir>/test-setup.ts"],
+  "transform": {
+    "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "@nrwl/react/plugins/jest",
+    "^.+\\.[tj]sx?$": "babel-jest"
+  }
+}
