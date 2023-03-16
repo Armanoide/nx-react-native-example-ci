@@ -1,0 +1,62 @@
+name: iOS
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: 🛍 Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: 💽 Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          cache: 'yarn'
+
+      - name: 🧩 Install Dependencies
+        run: yarn --frozen-lockfile --prefer-offline
+
+      - name: ✅ Linter
+        run: yarn nx run-many --all --target=lint
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "2.7.6"
+
+      - name: ⚙️Install Fastlane
+        run: cd apps/mobile && bundle install && cd ../../
+
+      - name: 💾Cache pods install
+        id: cache-pods
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cocoapods/repos
+            apps/mobile/ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
+      - name: ⛓️Install pods
+        run: cd apps/mobile/ios && pod install
+
+      - name: 🪛Configure Simulator tools
+        run: |
+          brew tap wix/brew
+          brew install applesimutils
+
+      - name: 🧪 Run iOS test with detox
+        run: yarn run test:mobile:e2e:ios
+
+      - name: 📸 Upload artifacts in failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-artifacts
+          path: |
+            **/artifacts/
